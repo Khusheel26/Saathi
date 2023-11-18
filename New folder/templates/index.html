@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Depression Chatbot</title>
+</head>
+<body>
+    <h1>Welcome to the Depression Chatbot</h1>
+    <form method="POST" action="/chat">
+        <input type="text" name="user_input" placeholder="Enter your text">
+        <input type="submit" value="Ask">
+    </form>
+    {% if user_input %}
+    <p>You: {{ user_input }}</p>
+    <p>Chatbot: {{ response }}</p>
+    {% endif %}
+</body>
+</html>

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Saathi</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.15/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+        body {
+            background-color: #f1f1f1; /* Light gray background */
+            color: #333; /* Dark text color */
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .main{
+            width: 100%;
+            height: 100%;
+            background-color: black;
+        }
+        .chat-container {
+            width: 80%;
+            height: 80vh;
+            max-width: 600px; /* Limit chat width */
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #fff; /* White background */
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2); /* Add a subtle shadow */
+        }
+
+        .chat-container h1 {
+            background-color: #007bff; /* Blue header background */
+            color: #fff; /* White text */
+            padding: 10px;
+            margin: 0;
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+        }
+    
+        .chat-log {
+            max-height: 100vh; /* Limit chat log height */
+            overflow-y: auto;
+            padding: 10px;
+        }
+    
+        .chat-bubble {
+            max-width: 80%;
+            word-wrap: break-word;
+            border-radius: 10px;
+            margin: 5px;
+            padding: 8px;
+            animation: fadeIn 0.3s ease forwards;
+        }
+    
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+    
+        .user-bubble {
+            background-color:#debdee;
+            color: #000000;
+            align-self: flex-end;
+        }
+    
+        .bot-bubble {
+            background-color: #d77fed; /* Light gray background for bot messages */
+            align-self: flex-start;
+        }
+    
+        .msg-container {
+            display: flex;
+            justify-content: flex-start;
+            align-items: flex-end;
+            gap: 5px;
+        }
+    
+        #user-input {
+            padding: 10px;
+            border: none;
+            border-top: 1px solid #ccc; /* Light gray border */
+            resize: none;
+            outline: none;
+            width: 80%;
+        }
+    
+        #send-button {
+            background-color: #007bff; /* Blue send button */
+            color: #fff; /* White text */
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        #send-button:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+    </style>
+</head>
+<body>
+   <div class="main">
+    <div id="chat-container" class="p-4 rounded-md">
+        <marquee><centre><h1 class="text-xl font-bold mb-2 text-white align-self">SAATHI-AI CHATBOT</h1></centre></marquee>
+        <div class="chat-log">
+            <div class="chat-bubble bot-bubble">
+                <i class="fas fa-robot"></i> <!-- User icon -->
+                 Hello, how can I help you?
+            </div>
+            <div class="chat-bubble bot-bubble">
+                <i class="fas fa-robot"></i> <!-- Bot icon -->
+                Hi! I'm here to assist you.
+            </div>
+            
+        </div>
+        <form id="chat-form">
+            <div class="msg-container flex items-center">
+                <input type="text" id="user-input" placeholder="Type your message" class="border rounded-md px-2 py-1 w-full">
+                <button type="submit" id="send-button" class="ml-2 px-4 py-2">Send</button>
+            </div>
+        </form>
+    </div>
+   </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#chat-form').submit(function (e) {
+                e.preventDefault();
+                const user_input = $('#user-input').val();
+                const chatLog = $('.chat-log');
+    
+                // Display user input with "You:" prefix and user icon
+                chatLog.append('<div class="msg-container"><div class="chat-bubble user-bubble"><i class="fas fa-user-circle"></i> You: ' + user_input + '</div></div>');
+    
+                $.ajax({
+                    url: '/chatbot',
+                    method: 'POST',
+                    data: { user_input: user_input },
+                    success: function (data) {
+                        // Display bot response with bot icon
+                        chatLog.append('<div class="msg-container"><div class="chat-bubble bot-bubble"><i class="fas fa-robot"></i> ' + data.response + '</div></div>');
+                        $('#user-input').val('');
+                        chatLog.scrollTop(chatLog[0].scrollHeight);
+                    }
+                });
+            });
+        });
+    </script>
+    
+</body>
+</html>
